@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title="detail"
+		viewActivate="showDetailData()">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import mx.utils.ObjectUtil;
+			import spark.components.supportClasses.StyleableTextField;
+			
+			[Bindable]
+			private var imageLargeURL:String;
+			[Bindable]
+			private var imageHeight:int;
+			[Bindable]
+			private var imageWidth:int;
+			
+			private var urlLink:String;
+			
+			private function showDetailData():void
+			{					
+				imageLargeURL = data.images[2].url;
+				imageHeight = 2*int(data.images[2].height);
+				imageWidth = 2*int(data.images[2].width);
+				
+				StyleableTextField(brandName.textDisplay).htmlText = "Brand: "+data.brandName;
+				StyleableTextField(itemNname.textDisplay).htmlText = "Name: "+data.name;
+				StyleableTextField(priceLabel.textDisplay).htmlText = "Price: "+data.priceLabel;
+				StyleableTextField(retailer.textDisplay).htmlText = "Retailer: "+data.retailer;
+				StyleableTextField(description.textDisplay).htmlText = data.description.toString().replace(/\r\n/g, "\n");
+				
+				urlLink = data.url;
+			}
+			
+			private function back_clickHandler(event:MouseEvent):void
+			{
+				navigator.popView();
+			}
+			
+			protected function navigate_clickHandler(event:MouseEvent):void
+			{
+				//var req:URLRequest = new URLRequest(urlLink);
+				//navigateToURL(req, "_blank");
+				trace(ObjectUtil.toString(urlLink));
+				navigator.pushView(Browser, urlLink);
+
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:navigationContent>
+		<s:Button id="back" label="back" click="back_clickHandler(event)"/>
+	</s:navigationContent>
+
+	<s:Scroller width="100%" height="100%">
+		
+		<s:VGroup width="100%" height="100%" gap="24" horizontalAlign="center" paddingBottom="0"
+				  paddingLeft="12" paddingRight="12" paddingTop="54">
+					
+			<s:Image id="productImage" width="{imageWidth}" height="{imageHeight}" smooth="true" smoothingQuality="high" source="{imageLargeURL}"/>
+			
+			<s:Button id="navigate" label="Get it here!" width="{productImage.width}" click="navigate_clickHandler(event)"/>
+			
+			<s:TextArea id="itemNname" width="100%" height="36" editable="false"/>
+			<s:TextArea id="brandName" width="100%" height="36" editable="false"/>
+			<s:TextArea id="retailer" width="100%" height="36" editable="false"/>
+			<s:TextArea id="priceLabel" width="100%" height="36" editable="false"/>
+			<s:TextArea id="description" editable="false" width="100%" height="2000"
+						contentBackgroundAlpha="0" contentBackgroundColor="#FFFFFF" borderVisible="false"/>
+			
+		</s:VGroup>
+	
+	</s:Scroller>
+	
+</s:View>

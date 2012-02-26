@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:getproducts="services.getproducts.*"
+		xmlns:local="*" show="showHandler(event)"
+		title="{navigator.context}" destructionPolicy="never"
+		creationComplete="init()">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.serializers.utility.TypeUtility;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.collections.errors.ItemPendingError;
+			import mx.events.FlexEvent;
+			import mx.rpc.AsyncResponder;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var iconWidth:int;
+			[Bindable]
+			private var iconHeight:int;
+			[Bindable]
+			public var productsList:ArrayCollection;
+			
+			public var pagePointer:uint;
+			
+			public var begin:int;
+			public var end:int;
+			
+			public var busyInterval:uint;
+
+
+			private function init():void
+			{
+				
+				iconWidth = 112;
+				iconHeight = 140;
+				pagePointer = 0;
+				productsList = new ArrayCollection();
+				
+				Operation1Result.token = getProducts.Operation1(String(navigator.context),pagePointer,12 ); // querystring, offset, perpage
+				Operation1Result.addEventListener(ResultEvent.RESULT, resultHandler);
+				Operation1Result.addEventListener(FaultEvent.FAULT, faultHandler);
+
+				toggleBusyIndicator();
+
+			}
+			
+			protected function myList_gestureSwipeHandler(event:TransformGestureEvent):void
+			{
+				if (event.offsetY < 0)
+				{
+					Operation1Result.token = getProducts.Operation1(String(navigator.context),pagePointer,6 ); // querystring, offset, perpage
+					Operation1Result.addEventListener(ResultEvent.RESULT, resultHandler);
+					Operation1Result.addEventListener(FaultEvent.FAULT, faultHandler);
+					toggleBusyIndicator();
+				}
+			}
+			
+			
+			protected function resultHandler(evt:Event):void
+			{
+				toggleBusyIndicator();
+				productsList.addAll(Operation1Result.lastResult.products);
+				pagePointer = pagePointer + 6;
+				setTimerBusyClear(2000);
+			}
+			
+			protected function faultHandler(evt:Event):void
+			{
+				toggleBusyIndicator();
+			}
+			
+ 			private function myList_changeHandler(event:IndexChangeEvent):void
+			{
+				navigator.pushView(DetailView,myList.selectedItem);
+			} 
+			
+			private function back_clickHandler(event:MouseEvent):void
+			{
+				navigator.popView();
+			}
+			
+			private function setTimerBusyClear(duration:uint):void
+			{
+				busyInterval = setInterval (clearBusyIndicator, duration);					
+			}
+			
+			private function toggleBusyIndicator():void
+			{
+				clearInterval(busyInterval);
+				bi.visible = !bi.visible;
+				bi.includeInLayout = !bi.includeInLayout;
+			}
+			
+			private function clearBusyIndicator():void
+			{
+				bi.visible = false;
+				bi.includeInLayout = false;
+			}
+			
+			private function showHandler(event:FlexEvent):void
+			{
+				myList.selectedItem = null;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:CallResponder id="Operation1Result"/>
+		<getproducts:GetProducts id="getProducts"/>
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:HGroup width="100%" verticalAlign="middle" paddingLeft="12" paddingRight="6">
+			<s:BusyIndicator id="bi" visible="false" includeInLayout="false" symbolColor="white" showEffect="Fade"/>
+			<s:Button id="back" label="back" click="back_clickHandler(event)" moveEffect="Move"/>
+		</s:HGroup>
+	</s:navigationContent>
+	
+	<s:List id="myList" width="100%" height="100%" dataProvider="{productsList}" change="myList_changeHandler(event)" gestureSwipe="myList_gestureSwipeHandler(event)">
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer 
+					iconFunction="getImageURL"
+					iconWidth="{iconWidth}"
+					iconHeight="{iconHeight}"
+					labelFunction="getLabel"
+					messageFunction="getMessage"
+					verticalAlign="top"
+					iconPlaceholder="assets/LoadingIcon.fxg">
+					<fx:Script>
+						<![CDATA[
+							
+							import assets.LoadingIcon;
+							import flash.display.Loader;
+							import spark.components.Image;
+							
+							private function getImageURL(item:Object):String
+							{
+								var imageURL:String = item.images[1].url;
+								return imageURL;
+							}
+							
+							private function getLabel(item:Object):String
+							{
+								var label:String = item.name;
+								return label;
+							}
+							
+							private function getMessage(item:Object):String
+							{
+								var message:String = item.priceLabel + ", " + item.brandName;
+								return message;
+							}
+							
+						]]>
+					</fx:Script>
+				</s:IconItemRenderer>
+			</fx:Component>
+		</s:itemRenderer>
+	</s:List>
+	
+</s:View>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:getproducts="services.getproducts.*"
+		title="style" backgroundColor="#555555">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			
+			[Bindable]
+			private var productCollection:ArrayCollection; 
+			
+			public var queryString:String;
+			
+			private function init():void
+			{
+
+			}
+			
+			protected function category_clickHandler(event:MouseEvent):void
+			{
+				if (event.currentTarget.id == "tops")
+				{
+					queryString = "womens-tops";
+				}
+				if (event.currentTarget.id == "pants")
+				{
+					queryString = "pants-shorts";
+				}
+				if (event.currentTarget.id == "clogs")
+				{
+					queryString = "mules-and-clogs";
+				}
+				else if (event.currentTarget.id  == "athletic")
+				{
+					queryString = "shoes-athletic";
+				}
+				else if (event.currentTarget.id == "hair"  )
+				{
+					queryString = "hair-accessories";
+				}
+				else if (event.currentTarget.id == "shoulder"  )
+				{
+					queryString = "shoulder-bags";
+				}
+				else if (event.currentTarget.id == "tote"  )
+				{
+					queryString = "tote-bags";
+				}
+				else if (event.currentTarget.id == "hobo"  )
+				{
+					queryString = "hobo-bags";
+				}
+				else if (event.currentTarget.id == "haircare"  )
+				{
+					queryString = "hair-care";
+				}
+				else if (event.currentTarget.id == "bath"  )
+				{
+					queryString = "bath-body";
+				}
+				else if (event.currentTarget.id == "tools"  )
+				{
+					queryString = "beauty-tools";
+				}
+				else if (event.currentTarget.id == "skincare"  )
+				{
+					queryString = "skin-care";
+				}
+				else
+				{
+					queryString = event.currentTarget.id;
+				}
+				
+				navigator.pushView(ListView, null, queryString);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:CallResponder id="Operation1Result"/>
+		<getproducts:GetProducts id="getProducts"/>
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:BusyIndicator id="bi" 
+						 visible="false" 
+						 symbolColor="white"/>
+	</s:navigationContent>
+	
+
+	<s:Scroller width="100%" height="100%" x="12" y="12">
+		
+		<s:TileGroup x="12" y="12" width="100%" height="100%" horizontalAlign="center"
+					horizontalGap="12" verticalAlign="middle" verticalGap="12">
+			
+			
+			
+			<s:Image source="@Embed(source='assets/dresses.png')" id="dresses" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/tops.png')" id="tops" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/skirts.png')" id="skirts" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/jackets.png')" id="jackets" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/sweaters.png')" id="sweaters" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/pants.png')" id="pants" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/denim.png')" id="jeans" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/outerwear.png')" id="outerwear" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/swimwear.png')" id="swimsuits" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/intimates.png')" id="intimates" buttonMode="true" click="category_clickHandler(event)"/>
+			
+			<s:Image source="@Embed(source='assets/platforms.png')" id="platforms" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/pumps.png')" id="pumps" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/wedges.png')" id="wedges" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/flats.png')" id="flats" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/boots.png')" id="boots" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/clogs.png')" id="clogs" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/sandals.png')" id="sandals" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/athletic.png')" id="athletic" buttonMode="true" click="category_clickHandler(event)"/>
+			
+			<s:Image source="@Embed(source='assets/belts.png')" id="belts" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/gloves.png')" id="gloves" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/hats.png')" id="hats" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/jewelry.png')" id="jewelry" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/sunglasses.png')" id="sunglasses" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/scarves.png')" id="scarves" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/hair.png')" id="hair" buttonMode="true" click="category_clickHandler(event)"/>
+			
+			<s:Image source="@Embed(source='assets/shoulderbags.png')" id="shoulder" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/satchels.png')" id="satchels" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/totes.png')" id="tote" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/wallets.png')" id="wallets" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/hobos.png')" id="hobo" buttonMode="true" click="category_clickHandler(event)"/>
+			
+			<s:Image source="@Embed(source='assets/skincare.png')" id="skincare" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/makeup.png')" id="makeup" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/haircare.png')" id="haircare" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/fragrance.png')" id="perfume" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/bath.png')" id="bath" buttonMode="true" click="category_clickHandler(event)"/>
+			<s:Image source="@Embed(source='assets/tools.png')" id="tools" buttonMode="true" click="category_clickHandler(event)"/>
+			
+		</s:TileGroup>
+		
+		</s:Scroller>
+	
+</s:View>

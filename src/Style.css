@@ -1,0 +1,21 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+
+
+global
+{
+
+}
+
+s|TextArea
+{
+	contentBackgroundAlpha: 0;
+	contentBackgroundColor: #FFFFFF;
+	borderVisible: false;
+	
+	paddingBottom: 0;
+	paddingLeft: 2;
+	paddingRight: 2;
+	paddingTop: 0;
+}
+	

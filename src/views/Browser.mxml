@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="browser"
+		xmlns:local="*"
+		backKeyPressed="onBackKeyPressed(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+
+						
+			protected function stageWebView_locationChangingHandler(event:LocationChangeEvent):void
+			{
+				trace("location changing " + event.location);
+				// You can call event.preventDefault() to prevent the URL change
+			}
+			
+			
+			protected function stageWebView_locationChangeHandler(event:LocationChangeEvent):void
+			{
+				trace("location change " + event.location);
+			}
+			
+			private function removeWebView():void
+			{
+				stageWebView.dispose();
+				stageWebView = null;
+				popThisView();
+				
+			}
+			
+			private function onBackKeyPressed(event:FlexEvent):void{
+
+				stageWebView.dispose();
+				stageWebView = null;
+			}
+			
+			private function popThisView():void
+			{
+				navigator.popView();
+			}
+			
+			private function back_clickHandler(event:MouseEvent):void
+			{
+				removeWebView();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:navigationContent>
+		<s:Button id="back" label="back" click="back_clickHandler(event)"/>
+	</s:navigationContent>
+	
+	
+	<mobile:StageWebViewUIComponent xmlns:mobile="com.soenkerohde.mobile.*" id="stageWebView" url="{data}"
+									locationChanging="stageWebView_locationChangingHandler(event)" 
+									locationChange="stageWebView_locationChangeHandler(event)"/>
+	
+</s:View>
